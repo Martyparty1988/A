@@ -2325,3 +2325,149 @@ function downloadCSV(content, filename) {
         URL.revokeObjectURL(url);
     }, 100);
 }
+function exportDeductions() {
+    try {
+        const workLogs = JSON.parse(localStorage.getItem('workLogs')) || [];
+        
+        if (workLogs.length === 0) {
+            alert('Žádné záznamy pro výpočet srážek.');
+            return;
+        }
+        
+        // Výpočet srážek podle měsíců
+        const deductionsByMonth = {};
+        
+        workLogs.forEach(log => {
+            const date = new Date(log.startTime);
+            const month = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}`;
+            const monthKey = `${month}-${log.person}`;
+            
+            if (!deductionsByMonth[monthKey]) {
+                deductionsByMonth[monthKey] = {
+                    person: log.person,
+                    month: month,
+                    totalDuration: 0,
+                    totalEarnings: 0
+                };
+            }
+            
+            deductionsByMonth[monthKey].totalDuration += log.duration;
+            deductionsByMonth[monthKey].totalEarnings += log.earnings;
+        });
+        
+        // Příprava dat pro CSV
+        const summaryData = Object.values(deductionsByMonth);
+        
+        // Seřazení podle data a osoby
+        summaryData.sort((a, b) => {
+            if (a.month !== b.month) {
+                return b.month.localeCompare(a.month);
+            }
+            return a.person.localeCompare(b.person);
+        });
+        
+        // Kontrola, zda je měsíc kompletní
+        const currentDate = new Date();
+        const currentMonth = `${currentDate.getFullYear()}-${(currentDate.getMonth() + 1).toString().padStart(2, '0')}`;
+        
+        // Filtrace kompletních měsíců
+        const completeMonths = summaryData.filter(summary => summary.month !== currentMonth);
+        
+        if (completeMonths.length === 0) {
+            alert('Žádné kompletní měsíce pro výpočet srážek.');
+            return;
+        }
+        
+        // Vytvoření CSV dat
+        let csvContent = 'Osoba,Měsíc,Celkem odpracováno (h),Hrubý výdělek (Kč),Srážka (%),Srážka (Kč)\n';
+        
+        completeMonths.forEach(summary => {
+            const person = summary.person === 'maru' ? 'Maru' : 'Marty';
+            const [year, month] = summary.month.split('-');
+            const monthText = new Date(year, month - 1, 1).toLocaleDateString('cs-CZ', { month: 'long', year: 'numeric' });
+            
+            // Výpočet srážky
+            const deductionRate = DEDUCTION_RATES[summary.person] * 100;
+            const deduction = Math.round(summary.totalEarnings * DEDUCTION_RATES[summary.person]);
+            
+            // Formátování doby
+            const hours = (summary.totalDuration / (1000 * 60 * 60)).toFixed(2);
+            
+            csvContent += `${person},${monthText},${hours},${summary.totalEarnings.toFixed(0)},${deductionRate.toFixed(2)},${deduction}\n`;
+        });
+        
+        // Export do souboru
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        
+        const now = new Date();
+        const dateStr = now.toISOString().substring(0, 10);
+        const filename = `srazky-export-${dateStr}.csv`;
+        
+        const downloadLink = document.createElement('a');
+        downloadLink.href = url;
+        downloadLink.download = filename;
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+        URL.revokeObjectURL(url);
+    } catch (error) {
+        console.error('Chyba při exportu srážek:', error);
+        alert('Chyba při exportu srážek.');
+    }
+}
+
+function exportDebts() {
+    try {
+        const debts = JSON.parse(localStorage.getItem('debts')) || [];
+        const payments = JSON.parse(localStorage.getItem('debtPayments')) || [];
+        
+        if (debts.length === 0) {
+            alert('Žádné dluhy k exportu.');
+            return;
+        }
+        
+        // Vytvoření CSV dat pro dluhy
+        let csvContent = 'Osoba,Popis,Celková částka,Měna,Datum vzniku,Datum splatnosti,Zaplaceno,Zbývá\n';
+        
+        debts.forEach(debt => {
+            const person = debt.person === 'maru' ? 'Maru' : 'Marty';
+            const dateCreated = new Date(debt.date).toLocaleDateString('cs-CZ');
+            const dateDue = debt.dueDate ? new Date(debt.dueDate).toLocaleDateString('cs-CZ') : '';
+            
+            // Výpočet zaplacené částky
+            const debtPayments = payments.filter(p => p.debtId === debt.id);
+            const totalPaid = debtPayments.reduce((sum, p) => sum + p.amount, 0);
+            const remaining = debt.amount - totalPaid;
+            
+            // Popis (escapování uvozovek)
+            const description = `"${debt.description.replace(/"/g, '""')}"`;
+            
+            csvContent += `${person},${description},${debt.amount.toFixed(2)},${debt.currency},${dateCreated},${dateDue},${totalPaid.toFixed(2)},${remaining.toFixed(2)}\n`;
+        });
+        
+        // Export do souboru
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        
+        const now = new Date();
+        const dateStr = now.toISOString().substring(0, 10);
+        const filename = `dluhy-export-${dateStr}.csv`;
+        
+        const downloadLink = document.createElement('a');
+        downloadLink.href = url;
+        downloadLink.download = filename;
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+        URL.revokeObjectURL(url);
+    } catch (error) {
+        console.error('Chyba při exportu dluhů:', error);
+        alert('Chyba při exportu dluhů.');
+    }
+}
+
+// Pomocná funkce pro generování ID
+function generateId() {
+    return Date.now().toString(36) + Math.random().toString(36).substring(2, 7);
+}
