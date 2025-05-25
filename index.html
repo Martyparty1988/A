@@ -1,1 +1,56 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vylepšený To-Do List</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Můj To-Do List</h1>
+
+        <div class="input-area">
+            <input type="text" id="task-text" placeholder="Nový úkol...">
+            <div class="task-meta">
+                <label for="task-priority">Priorita:</label>
+                <select id="task-priority">
+                    <option value="low">Nízká</option>
+                    <option value="medium" selected>Střední</option>
+                    <option value="high">Vysoká</option>
+                </select>
+                <label for="task-due-date">Termín:</label>
+                <input type="date" id="task-due-date">
+                <label for="task-category">Kategorie:</label>
+                <input type="text" id="task-category" placeholder="Např. Práce">
+            </div>
+            <button id="add-task-btn">Přidat úkol</button>
+        </div>
+
+        <div class="controls-area">
+            <div class="filter-sort">
+                <label for="filter-tasks">Filtrovat:</label>
+                <select id="filter-tasks">
+                    <option value="all">Všechny</option>
+                    <option value="active">Aktivní</option>
+                    <option value="completed">Dokončené</option>
+                </select>
+            </div>
+            <div class="filter-sort">
+                <label for="sort-tasks">Řadit podle:</label>
+                <select id="sort-tasks">
+                    <option value="default">Výchozí (přidání)</option>
+                    <option value="dueDate">Termínu dokončení</option>
+                    <option value="priority">Priority</option>
+                </select>
+            </div>
+        </div>
+
+        <ul id="task-list">
+            </ul>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
 
