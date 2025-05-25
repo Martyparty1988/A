@@ -1,706 +1,224 @@
-/* CSS proměnné pro konzistentní vzhled */
-:root {
-    --primary-color: #0d6efd;
-    --secondary-color: #6c757d;
-    --success-color: #28a745;
-    --danger-color: #dc3545;
-    --warning-color: #ffc107;
-    --info-color: #17a2b8;
-    --light-color: #f8f9fa;
-    --dark-color: #343a40;
-    --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    --border-radius: 0.25rem;
-    --box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
-    --transition: all 0.3s ease;
-}
-
-/* Reset a základní styly */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
 body {
-    font-family: var(--font-family);
-    background-color: var(--light-color);
-    color: var(--dark-color);
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
     line-height: 1.6;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.container {
+    background-color: #fff;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 700px;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.input-area {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.input-area input[type="text"],
+.input-area input[type="date"],
+.input-area select {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
     font-size: 16px;
 }
 
-a {
-    color: var(--primary-color);
-    text-decoration: none;
+.input-area .task-meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 10px;
+    align-items: center;
 }
 
-a:hover {
-    color: #0056b3;
+.input-area .task-meta label {
+    font-size: 0.9em;
+    margin-bottom: -5px; /* Trochu přiblížit k inputu pod ní */
 }
 
-h1, h2, h3, h4, h5, h6 {
-    margin-bottom: 0.75rem;
-    font-weight: 500;
-    line-height: 1.2;
-}
 
-ul {
-    list-style-type: none;
-}
-
-button, input, select, textarea {
-    font-family: inherit;
-    font-size: inherit;
-    line-height: inherit;
-}
-
-button {
-    cursor: pointer;
-}
-
-/* Hlavička a navigace */
-.main-header {
-    background-color: var(--dark-color);
+#add-task-btn {
+    padding: 12px;
+    background-color: #5cb85c;
     color: white;
-    padding: 1rem;
-    position: sticky;
-    top: 0;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    z-index: 100;
-    box-shadow: var(--box-shadow);
-}
-
-.header-left {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.header-left h1 {
-    font-size: 1.5rem;
-    margin: 0;
-}
-
-.menu-toggle {
-    display: none;
-    background: none;
     border: none;
-    color: white;
-    font-size: 1.5rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
 }
 
-.main-nav ul {
+#add-task-btn:hover {
+    background-color: #4cae4c;
+}
+
+.controls-area {
     display: flex;
-    list-style-type: none;
-    margin: 0;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.filter-sort {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.filter-sort label {
+    font-size: 0.95em;
+}
+
+.filter-sort select {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+#task-list {
+    list-style: none;
     padding: 0;
 }
 
-.main-nav a {
-    color: rgba(255, 255, 255, 0.8);
-    padding: 0.5rem 1rem;
+#task-list li {
+    background-color: #fff;
+    padding: 15px;
+    margin-bottom: 10px;
+    border: 1px solid #eee;
+    border-radius: 4px;
     display: flex;
-    align-items: center;
-    transition: var(--transition);
-    border-radius: var(--border-radius);
+    flex-direction: column;
+    gap: 8px;
+    transition: background-color 0.3s ease, opacity 0.3s ease;
 }
 
-.main-nav a i {
-    margin-right: 0.5rem;
+#task-list li.completed .task-content .task-text {
+    text-decoration: line-through;
+    color: #aaa;
 }
-
-.main-nav a:hover,
-.main-nav a.active {
-    color: white;
-    background-color: rgba(255, 255, 255, 0.1);
-}
-
-/* Header timer */
-.header-right {
-    display: flex;
-    align-items: center;
-}
-
-#header-timer {
-    background-color: rgba(255, 255, 255, 0.1);
-    padding: 0.5rem 1rem;
-    border-radius: var(--border-radius);
-    margin-left: 1rem;
-    font-size: 0.9rem;
-}
-
-#header-timer.hidden {
-    display: none;
-}
-
-#header-timer span {
-    margin-right: 0.5rem;
-}
-
-#header-timer-time {
-    font-weight: bold;
-}
-
-/* Hlavní obsah */
-main {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 1rem;
-}
-
-section {
-    display: none;
-    padding: 1rem 0;
-}
-
-section.active {
-    display: block;
-}
-
-section h2 {
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid #ddd;
-    margin-bottom: 1.5rem;
-}
-
-section h3 {
-    margin-top: 1.5rem;
-    margin-bottom: 1rem;
-    font-size: 1.3rem;
-}
-
-/* Kontejnery a karty */
-.timer-container,
-.manual-entry,
-.finance-entry,
-.finance-logs,
-.deductions-summary,
-.debts-overview,
-.debt-entry,
-.payment-entry,
-.filters-container,
-.work-logs,
-.graph-container,
-.export-actions,
-.categories-management,
-.rent-settings,
-.data-management {
-    background-color: white;
-    padding: 1.5rem;
-    border-radius: var(--border-radius);
-    box-shadow: var(--box-shadow);
-    margin-bottom: 1.5rem;
-}
-
-/* Formuláře */
-.form-row {
-    display: flex;
-    flex-wrap: wrap;
-    margin-bottom: 1rem;
-    gap: 1rem;
-}
-
-.form-group {
-    flex: 1 1 200px;
-    margin-bottom: 1rem;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 500;
-}
-
-.form-group input,
-.form-group select,
-.form-group textarea {
-    width: 100%;
-    padding: 0.5rem;
-    border: 1px solid #ddd;
-    border-radius: var(--border-radius);
-}
-
-.form-group input:focus,
-.form-group select:focus,
-.form-group textarea:focus {
-    border-color: var(--primary-color);
-    outline: none;
-    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
-}
-
-.form-actions {
-    display: flex;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-    margin-top: 1rem;
-}
-
-/* Tlačítka */
-button, 
-.button-like-label {
-    padding: 0.5rem 1rem;
-    border: none;
-    border-radius: var(--border-radius);
-    background-color: var(--primary-color);
-    color: white;
-    transition: var(--transition);
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-button:hover {
-    background-color: #0056b3;
-}
-
-button:disabled {
+#task-list li.completed {
     opacity: 0.7;
-    cursor: not-allowed;
 }
 
-.cancel-button {
-    background-color: var(--secondary-color);
-}
 
-.cancel-button:hover {
-    background-color: #5a6268;
-}
-
-.delete-button {
-    background-color: var(--danger-color);
-}
-
-.delete-button:hover {
-    background-color: #c82333;
-}
-
-.import-button {
-    background-color: var(--info-color);
-}
-
-.import-button:hover {
-    background-color: #138496;
-}
-
-.button-like-label {
-    cursor: pointer;
-}
-
-/* Časovač */
-.timer-display {
-    text-align: center;
-    margin: 1.5rem 0;
-}
-
-#timer-time {
-    font-size: 3rem;
-    font-weight: bold;
-    line-height: 1.2;
-}
-
-#timer-info {
-    font-size: 1.2rem;
-    margin: 0.5rem 0;
-}
-
-#timer-info span {
-    margin-right: 0.5rem;
-}
-
-.timer-earnings-display {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: var(--success-color);
-    margin-top: 0.5rem;
-}
-
-.timer-person-select {
-    display: flex;
-    gap: 1.5rem;
-    margin-bottom: 1rem;
-    flex-wrap: wrap;
-}
-
-.timer-person-select label {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    cursor: pointer;
-}
-
-.timer-activity-select,
-.timer-note {
-    margin-bottom: 1rem;
-}
-
-.timer-buttons {
-    display: flex;
-    gap: 0.5rem;
-    margin-top: 1rem;
-}
-
-#timer-start {
-    background-color: var(--success-color);
-}
-
-#timer-start:hover {
-    background-color: #218838;
-}
-
-#timer-pause {
-    background-color: var(--warning-color);
-    color: var(--dark-color);
-}
-
-#timer-pause:hover {
-    background-color: #e0a800;
-}
-
-#timer-stop {
-    background-color: var(--danger-color);
-}
-
-#timer-stop:hover {
-    background-color: #c82333;
-}
-
-/* Tabulky */
-.table-container {
-    overflow-x: auto;
-    margin-bottom: 1.5rem;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    border: 1px solid #ddd;
-    background-color: white;
-}
-
-th, td {
-    padding: 0.75rem;
-    border: 1px solid #ddd;
-    text-align: left;
-}
-
-th {
-    background-color: #f8f9fa;
-    font-weight: 500;
-}
-
-tr:nth-child(even) {
-    background-color: rgba(0, 0, 0, 0.02);
-}
-
-.empty-placeholder,
-.accordion-empty {
-    text-align: center;
-    padding: 2rem;
-    color: var(--secondary-color);
-    font-style: italic;
-}
-
-/* Info box */
-.info-box {
-    background-color: rgba(13, 110, 253, 0.1);
-    padding: 1rem;
-    border-radius: var(--border-radius);
-    margin-bottom: 1rem;
-}
-
-.warning-text {
-    color: var(--danger-color);
-    margin-top: 1rem;
-    font-weight: 500;
-}
-
-/* Kategorie */
-.category-section {
-    margin-bottom: 2rem;
-}
-
-.category-section ul {
-    border: 1px solid #ddd;
-    border-radius: var(--border-radius);
-    padding: 0.5rem;
-    margin-bottom: 1rem;
-    max-height: 200px;
-    overflow-y: auto;
-}
-
-.category-section li {
-    padding: 0.5rem;
-    border-bottom: 1px solid #eee;
+#task-list li .task-content {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap; /* Pro menší obrazovky */
 }
 
-.category-section li:last-child {
-    border-bottom: none;
-}
-
-.add-category {
-    display: flex;
-    gap: 0.5rem;
-}
-
-.add-category input {
-    flex: 1;
-    padding: 0.5rem;
-    border: 1px solid #ddd;
-    border-radius: var(--border-radius);
-}
-
-/* Accordion pro záznamy */
-.accordion-container {
-    margin-bottom: 1.5rem;
-}
-
-.accordion-item {
-    margin-bottom: 0.5rem;
-    border: 1px solid #ddd;
-    border-radius: var(--border-radius);
-    overflow: hidden;
-}
-
-.accordion-header {
-    background-color: #f8f9fa;
-    padding: 0.75rem 1rem;
+#task-list li .task-content .task-text {
     cursor: pointer;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    flex-grow: 1;
 }
 
-.accordion-header:hover {
-    background-color: #e9ecef;
-}
-
-.accordion-content {
-    padding: 1rem;
-    border-top: 1px solid #ddd;
-    display: none;
-}
-
-.accordion-content.active {
-    display: block;
-}
-
-/* Grafy */
-.chart-options {
-    display: flex;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
-    flex-wrap: wrap;
-}
-
-.chart-options button {
-    background-color: var(--secondary-color);
-}
-
-.chart-options button.active {
-    background-color: var(--primary-color);
-}
-
-#chart-area-container {
-    position: relative;
-    height: 400px;
-    margin-bottom: 1rem;
-}
-
-.chart-empty-placeholder {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-    color: var(--secondary-color);
-    font-style: italic;
-}
-
-/* Export akce */
-.export-actions {
+#task-list li .task-details {
+    font-size: 0.85em;
+    color: #555;
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5rem;
+    gap: 15px;
+}
+#task-list li .task-details span {
+    padding: 3px 6px;
+    border-radius: 3px;
+    background-color: #efefef;
 }
 
-.export-actions button {
-    background-color: var(--secondary-color);
+
+#task-list li .task-actions button {
+    padding: 6px 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-left: 8px;
+    transition: background-color 0.2s ease;
 }
 
-.export-actions button:hover {
-    background-color: #5a6268;
+.edit-btn { background-color: #f0ad4e; color: white; }
+.edit-btn:hover { background-color: #ec971f; }
+.delete-btn { background-color: #d9534f; color: white; }
+.delete-btn:hover { background-color: #c9302c; }
+.save-btn { background-color: #5cb85c; color: white; }
+.save-btn:hover { background-color: #4cae4c; }
+.cancel-btn { background-color: #777; color: white; }
+.cancel-btn:hover { background-color: #666; }
+
+
+/* Priority styling */
+#task-list li.priority-high { border-left: 5px solid #d9534f; }
+#task-list li.priority-medium { border-left: 5px solid #f0ad4e; }
+#task-list li.priority-low { border-left: 5px solid #5cb85c; }
+
+/* Styling pro editační mód */
+#task-list li.editing .task-content { display: none; }
+#task-list li.editing .task-details { display: none; }
+#task-list li.editing .task-actions { display: none; } /* Skryjeme původní akce */
+
+#task-list li .edit-form { display: none; } /* Skryté defaultně */
+#task-list li.editing .edit-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+#task-list li.editing .edit-form input,
+#task-list li.editing .edit-form select {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+#task-list li.editing .edit-form .edit-actions button {
+    padding: 8px 12px;
 }
 
-/* Footer */
-footer {
-    text-align: center;
-    padding: 1.5rem;
-    background-color: var(--dark-color);
-    color: white;
-    margin-top: 2rem;
-}
 
-/* Mobilní styly */
-@media (max-width: 768px) {
-    .main-header {
-        padding: 0.75rem;
+/* Responzivita */
+@media (max-width: 600px) {
+    body {
+        padding: 10px;
     }
-    
-    .header-left {
-        width: 100%;
+    .container {
+        padding: 15px;
     }
-    
-    .header-left h1 {
-        font-size: 1.2rem;
+    .input-area .task-meta {
+        grid-template-columns: 1fr; /* Jeden sloupec na malých obrazovkách */
     }
-    
-    .menu-toggle {
-        display: block;
-    }
-    
-    .main-nav {
-        width: 100%;
-        max-height: 0;
-        overflow: hidden;
-        transition: max-height 0.3s ease;
-    }
-    
-    .main-nav.show {
-        max-height: 300px;
-    }
-    
-    .main-nav ul {
+    .controls-area {
         flex-direction: column;
+        align-items: stretch;
+    }
+    .filter-sort select {
         width: 100%;
     }
-    
-    .main-nav li {
-        width: 100%;
-    }
-    
-    .main-nav a {
-        padding: 0.75rem 0;
-        width: 100%;
-    }
-    
-    .header-right {
-        display: none;
-    }
-    
-    main {
-        padding: 0.75rem;
-    }
-    
-    .timer-container,
-    .manual-entry,
-    .finance-entry,
-    .finance-logs,
-    .deductions-summary,
-    .debts-overview,
-    .debt-entry,
-    .payment-entry,
-    .filters-container,
-    .work-logs,
-    .graph-container,
-    .export-actions,
-    .categories-management,
-    .rent-settings,
-    .data-management {
-        padding: 1rem;
-    }
-    
-    .form-row {
+    #task-list li .task-content {
         flex-direction: column;
-        gap: 0.5rem;
+        align-items: flex-start;
+        gap: 5px;
     }
-    
-    .form-group {
-        flex: 1 1 100%;
+    #task-list li .task-actions {
+        margin-top: 10px;
+        align-self: flex-start; /* Zarovná tlačítka doleva */
     }
-    
-    #timer-time {
-        font-size: 2.5rem;
-    }
-    
-    .timer-buttons {
-        flex-direction: column;
-    }
-    
-    .timer-buttons button {
-        width: 100%;
-    }
-    
-    .timer-person-select {
-        flex-direction: column;
-        gap: 0.5rem;
-    }
-    
-    .form-actions {
-        flex-direction: column;
-    }
-    
-    .form-actions button,
-    .form-actions .button-like-label {
-        width: 100%;
-    }
-    
-    .export-actions button {
-        flex: 1 1 100%;
-    }
-    
-    #chart-area-container {
-        height: 300px;
-    }
-    
-    .chart-options {
-        flex-direction: column;
-    }
-    
-    .chart-options button {
-        width: 100%;
-    }
-}
-
-/* Styly pro velmi malé obrazovky */
-@media (max-width: 480px) {
-    .main-header {
-        padding: 0.5rem;
-    }
-    
-    .header-left h1 {
-        font-size: 1rem;
-    }
-    
-    section h2 {
-        font-size: 1.3rem;
-    }
-    
-    section h3 {
-        font-size: 1.1rem;
-    }
-    
-    #timer-time {
-        font-size: 2rem;
-    }
-    
-    .timer-earnings-display {
-        font-size: 1.3rem;
-    }
-    
-    .table-container {
-        margin-left: -1rem;
-        margin-right: -1rem;
-        width: calc(100% + 2rem);
-    }
-    
-    th, td {
-        padding: 0.5rem;
-        font-size: 0.9rem;
+     #task-list li .task-actions button {
+        margin-left: 0;
+        margin-right: 8px; /* Mezera mezi tlačítky */
     }
 }
